@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.core.mapper.NoticeMapper">
+
+    <resultMap id="NoticeResult" type="com.demo.core.model.Notice">
+        <id property="id" column="id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="title" column="title"/>
+        <result property="keywords" column="keywords"/>
+        <result property="summary" column="summary"/>
+        <result property="content" column="content"/>
+        <result property="actionTime" column="action_time"/>
+        <result property="coverImage" column="cover_image"/>
+        <result property="linkPath" column="link_path"/>
+        <result property="stick" column="stick"/>
+        <result property="released" column="released"/>
+    </resultMap>
+    
+    <select id="findPageByNotice" resultMap="NoticeResult">
+        SELECT
+        `id`,title,type_id,`released`,stick
+        FROM
+        bs_notice
+        ORDER BY `create_time` ASC
+        limit #{offset}, #{size}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT
+        count(id)
+        FROM
+        bs_notice
+    </select>
+
+    <select id="queryNoticeByTypeAndTitle" resultMap="NoticeResult">
+        SELECT
+        *
+        FROM
+        bs_notice
+        where
+        type_id = #{typeId}
+        and title = #{title}
+    </select>
+
+</mapper>

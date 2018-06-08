@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.core.mapper.AdminMapper">
+
+    <!-- 用户列表 -->
+    <resultMap type="com.demo.core.model.Admin" id="AdminListMapper">
+        <id property="id" column="id" />
+        <result property="groupId" column="group_id"/>
+        <result property="loginName" column="login_name"/>
+        <result property="password" column="password"/>
+        <result property="jobNumber" column="job_number"/>
+        <result property="position" column="position"/>
+        <result property="createAid" column="create_aid"/>
+        <result property="createTime" column="create_time" />
+        <association property="roleInfo" javaType="com.demo.core.model.Role">
+            <id property="id" column="role_id" />
+            <result property="roleName" column="role_name" />
+        </association>
+    </resultMap>
+
+    <!-- 根据用户姓名获取用户信息 -->
+    <select id="getUserByName" resultMap="AdminListMapper">
+        SELECT
+        *
+        FROM
+        bs_admin
+        where login_name = #{loginName}
+    </select>
+
+    <!-- 查询校验用户密码 -->
+    <select id="getAdminPassById" resultMap="AdminListMapper">
+        SELECT * FROM bs_admin WHERE id = #{userId} AND password = #{oldPass}
+    </select>
+
+    <!-- 获取后台用户列表 -->
+    <select id="getAdminList" resultMap="AdminListMapper">
+        SELECT
+        aar.id,
+        aar.group_id,
+        aar.position,
+        aar.password,
+        aar.job_number,
+        r.role_name,
+        aar.login_name,
+        aar.create_time,
+        aar.create_aid
+        FROM
+        (SELECT
+        *
+        FROM
+        bs_admin a
+        LEFT JOIN
+        (SELECT
+        admin_id,
+        role_id
+        FROM
+        bs_admin_role) ar
+        ON
+        a.id=ar.admin_id ) aar
+        LEFT JOIN
+        bs_role r
+        ON
+        aar.role_id=r.id
+        WHERE
+        1=1
+        <if test="admin.id != null and admin.id != ''">
+            AND aar.id = #{admin.id}
+        </if>
+        <if test="admin.loginName != null and admin.loginName != ''">
+            AND aar.login_name like '%${admin.loginName}%'
+        </if>
+    </select>
+
+</mapper>

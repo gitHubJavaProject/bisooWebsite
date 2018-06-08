@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>宣传</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <style>
+        .layui-form-item .layui-form-checkbox[lay-skin=primary] {
+            margin-top: 0px;
+        }
+
+        .layui-body {
+            padding: 15px;
+        }
+
+        .layui-form {
+            border-radius: 10px;
+            border: 1px solid #888;
+            margin: 10px 50px;
+            padding: 10px 50px 30px 0px;
+        }
+
+        .layui-form-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="shared/header :: header"></div>
+    <div th:replace="shared/sidenav :: sidenav"></div>
+    <div class="layui-body">
+        <div class="bread">
+            当前位置：
+            <span class="layui-breadcrumb" lay-separator="-">
+                    <a href="/notices/list">宣传管理</a>
+                    <a><cite id="current_bread" th:text="${null!=notice.id?'修改':'新增'}">新增</cite></a>
+            </span>
+        </div>
+        <form class="layui-form">
+            <div class="layui-form-item" style="margin-bottom: 0px;height:20px;color:red;">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <span id="msgId"></span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类</label>
+                <div class="layui-input-block">
+                    <select name="typeId" lay-verify="required" th:value="${notice.typeId}">
+                        <option value="1">app首页banner</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required="required" lay-verify="required" th:value="${notice.title}"
+                           class="layui-input" lay-filter="title"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">关键词</label>
+                <div class="layui-input-block">
+                    <input type="text" name="keywords" required="required" lay-verify="required" th:value="${notice.keywords}"
+                           class="layui-input" lay-filter="keywords"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">摘要</label>
+                <div class="layui-input-block">
+                        <textarea name="summary" required="required" lay-verify="required" th:text="${notice.summary}"
+                                  class="layui-textarea" lay-filter="summary"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">内容</label>
+                <div class="layui-input-block">
+                    <textarea id="demo" style="display: none;" name="content" th:text="${notice.content}"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="actionTime" required="required" lay-verify="required" id="actionTime"
+                               class="layui-input" lay-filter="actionTime" th:value="${null == notice.actionTime?'':#dates.format(notice.actionTime,'yyyy-MM-dd')}"/>
+                    </div>
+                    <label class="layui-form-label">封面图</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="coverImage"
+                               class="layui-input" lay-filter="coverImage" id="coverImageName"/>
+                        <button type="button" class="layui-btn" id="coverImage"
+                                style="position: absolute;top:0px;opacity: 0;z-index: 111;width:190px;height:37px;">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                    </div>
+                    <img th:src="@{'/file/show?path='+${notice.coverImage}}" id="coverImage_img" style="width:40px;height:40px;"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">链接</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="linkPath" required="required" lay-verify="required"
+                               class="layui-input" lay-filter="linkPath" th:value="${notice.linkPath}"/>
+                    </div>
+                    <label class="layui-form-label">置顶</label>
+                    <div class="layui-input-inline">
+                        <select name="stick" lay-verify="required" th:value="${notice.stick}"
+                                class="layui-select" lay-filter="stick">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                    <label class="layui-form-label">发布</label>
+                    <div class="layui-input-inline">
+                        <select name="released" lay-verify="required" th:value="${notice.released}"
+                                class="layui-select" lay-filter="released">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formDemo" type="submit">保存</button>
+            </div>
+        </form>
+    </div>
+    <div th:replace="shared/footer :: footer"></div>
+</div>
+<script src="/layui/layui.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.notice = /*[[${notice}]]*/ null
+    /*]]>*/
+</script>
+<script>
+    layui.use(['element', 'layer', 'form', 'jquery', 'upload', 'layedit', 'laydate'], function () {
+        var layer = layui.layer;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var layedit = layui.layedit;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        layedit.set({
+            uploadImage: {
+                url: '/file/upload' //接口url
+                , type: 'post' //默认post
+            }
+        });
+        var edit = layedit.build('demo'); //建立编辑器
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#actionTime' //指定元素
+        });
+
+        //执行实例
+        upload.render({
+            elem: '#coverImage' //绑定元素
+            , url: '/file/upload/' //上传接口
+            , done: function (res) {
+                if (res.code == 0) {
+                    $("#coverImage_img").attr("src", res.data.src);
+                    $("#coverImageName").attr("value", res.data.title)
+                }
+            }
+        });
+        form.on('submit(formDemo)', function (data) {
+            data.field.coverImage = $("#coverImage_img").attr("src").substring($("#coverImage_img").attr("src").indexOf("=") + 1);
+            data.field.content = layedit.getContent(edit);
+            if (notice.id) {
+                $.ajax({
+                    url: '/notices/update/' + notice.id,
+                    data: data.field,
+                    type: 'put',
+                    success: function (result) {
+                        if (result.responseCode === 1) {
+                            layer.alert(result.responseMsg, {icon: 6});
+                        }
+                        if (result.responseCode === 0) {
+                            $("#msgId").html(result.responseMsg)
+                        }
+                    },
+                    error: function (res) {
+                        alert(res.responseText);
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: '/notices/create',
+                    data: data.field,
+                    type: 'post',
+                    success: function (result) {
+                        if (result.responseCode === 1) {
+                            layer.alert(result.responseMsg, {icon: 6});
+                        }
+                        if (result.responseCode === 0) {
+                            $("#msgId").html(result.responseMsg)
+                        }
+                    },
+                    error: function (res) {
+                        alert(res.responseText);
+                    }
+                })
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

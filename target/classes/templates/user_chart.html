@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>报表</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+</head>
+<body>
+<table class="layui-table" style="text-align: center">
+    <thead>
+    <tr>
+        <th>下级</th>
+        <th>注册时间</th>
+        <th>返佣时段</th>
+        <th>
+            <select class="layui-select" onchange="selectParams(this);">
+                <option value="1">1月佣金</option>
+                <option value="2">2月佣金</option>
+
+            </select>
+        </th>
+    </tr>
+    </thead>
+    <tbody id="tbodyId">
+
+    </tbody>
+
+</table>
+<script src="/layui/layui.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.userId = /*[[${userId}]]*/ null
+    /*]]>*/
+</script>
+<script>
+    var $;
+    var layer;
+    layui.use(['element', 'layer', 'form', 'jquery', 'upload', 'layedit', 'laydate'], function () {
+        layer = layui.layer;
+        $ = layui.jquery;
+        init("");
+    });
+
+    function selectParams(ths) {
+        init($(ths).val())
+    }
+    
+    function init(param) {
+        $.get('/users/'+userId+'/chartData','param='+param,function (result) {
+            var html = '';
+            var count = 0;
+            for (key in result) {
+                html += '<tr><td>'+result[key].subLevel+'</td><td>'+result[key].createTime+'</td><td>'
+                    +result[key].timeD+'</td><td>'+result[key].account+'</td></tr>'
+                count = Number(count) + Number(result[key].account)
+            }
+            html += '<tr><td colspan="3">合计(IC)</td><td>'+count+'</td></tr>'
+            $('#tbodyId').html(html)
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<div th:fragment="header" class="layui-header">
+    <div class="layui-logo">运营后台</div>
+    <ul th:if="${null != session.loginAdmin}" class="layui-nav layui-layout-right">
+        <li class="layui-nav-item">
+            <a href="javascript:;">
+                <span th:text="${session.loginAdmin.loginName}"></span>
+                <span class="layui-nav-more"></span>
+            </a>
+            <dl class="layui-nav-child">
+                <dd><a href="/admins/updatePassword">修改密码</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">退出</a></li>
+    </ul>
+</div>
