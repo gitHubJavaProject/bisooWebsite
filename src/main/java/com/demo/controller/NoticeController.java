@@ -1,6 +1,7 @@
 package com.demo.controller;
 
 import com.demo.core.model.Notice;
+import com.demo.core.model.base.BaseEntity;
 import com.demo.core.model.base.DataBaseEntity;
 import com.demo.core.model.base.ResultEntity;
 import com.demo.service.NoticeService;

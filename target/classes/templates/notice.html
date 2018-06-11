@@ -180,12 +180,7 @@
                     data: data.field,
                     type: 'put',
                     success: function (result) {
-                        if (result.responseCode === 1) {
-                            layer.alert(result.responseMsg, {icon: 6});
-                        }
-                        if (result.responseCode === 0) {
-                            $("#msgId").html(result.responseMsg)
-                        }
+                        layer.alert(result.responseMsg, {icon: 6});
                     },
                     error: function (res) {
                         alert(res.responseText);
@@ -197,12 +192,7 @@
                     data: data.field,
                     type: 'post',
                     success: function (result) {
-                        if (result.responseCode === 1) {
-                            layer.alert(result.responseMsg, {icon: 6});
-                        }
-                        if (result.responseCode === 0) {
-                            $("#msgId").html(result.responseMsg)
-                        }
+                        layer.alert(result.responseMsg, {icon: 6});
                     },
                     error: function (res) {
                         alert(res.responseText);

@@ -10,4 +10,5 @@ public interface UserInfoMapper extends MyMapper<UserInfo> {
 
     void updateStatus(@Param("id") String id, @Param("status") Integer status);
 
+    UserInfo findOne(Object id);
 }

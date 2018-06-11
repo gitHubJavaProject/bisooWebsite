@@ -17,4 +17,6 @@ public interface NoticeMapper extends MyMapper<Notice> {
                                      @Param("title") String title);
 
     int count();
+
+    Notice findOne(Object id);
 }

@@ -93,7 +93,7 @@
             </div>
             <div class="layui-row">
                 <div class="layui-col-md12" style="text-align: center">
-                    <button class="layui-btn layui-btn-normal" type="button" style="width:400px;">保存</button>
+                    <button class="layui-btn layui-btn-normal" type="button" onclick="saveUserInfo();" style="width:400px;">保存</button>
                 </div>
             </div>
         </div>
@@ -115,12 +115,28 @@
          layer = layui.layer;
          $ = layui.jquery;
     });
+
     function approval() {
         layer.confirm('确认审核通过', function(index){
             layer.close(index);
             user.userInfo.status = APPROVAL
             $("#status").html('认证通过')
         });
+    }
+    
+    function saveUserInfo() {
+        $.ajax({
+            url: '/users/' + user.id,
+            type: 'patch',
+            success: function (result) {
+                if (result.responseCode === 1) {
+                    layer.alert(result.responseMsg,{icon: 6})
+                }
+            },
+            error: function (res) {
+                alert(res.responseText)
+            }
+        })
     }
 </script>
 </body>

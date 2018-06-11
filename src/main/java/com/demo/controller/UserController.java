@@ -74,13 +74,23 @@ public class UserController {
         return "user";
     }
 
+    //保存修改的状态
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
-    public ResultEntity approval(@PathVariable("id") String id) {
+    public ResultEntity update(@PathVariable("id") String id) {
         User user = userService.findUserAndUserInfoById(id);
+        if (null == user) {
+            return new ResultEntity(0, "资源不存在");
+        }
+        if (null == user.getUserInfo() || user.getUserInfo().getStatus() == CommonStatus.PRE_APPROVAL) {
+            return new ResultEntity(0, "用户信息未认证");
+        }
+        if (user.getUserInfo().getStatus() == CommonStatus.APPROVAL || user.getUserInfo().getStatus() == CommonStatus.NO_APPROVAL) {
+            return new ResultEntity(0, "该用户已经审核");
+        }
         user.getUserInfo().setStatus(CommonStatus.APPROVAL);
         userInfoService.updateStatus(user.getUserInfo().getId(), user.getUserInfo().getStatus());
-        return new ResultEntity(1, user);
+        return new ResultEntity(1, "保存成功", user);
     }
 
     @RequestMapping("/{id}/chart")

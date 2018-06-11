@@ -1,11 +1,14 @@
 package com.demo.service.impl;
 
 import com.demo.core.mapper.UserMapper;
+import com.demo.core.model.Notice;
 import com.demo.core.model.User;
+import com.demo.core.model.base.DataBaseEntity;
 import com.demo.mybatis.MyMapper;
 import com.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -36,5 +39,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public int count(String phone, String userId, String mail) {
         return userMapper.count(phone, userId, mail);
+    }
+
+    public User findOne(String id) {
+        return  userMapper.findOne(id);
+    }
+
+    @Override
+    public DataBaseEntity update(User user) {
+        Assert.notNull(user);
+        Assert.notNull(user.getId());
+        int count = userMapper.updateByPrimaryKeySelective(user);
+        User existing = userMapper.findOne(user.getId());
+        return new DataBaseEntity(count>0,null==existing?"":existing.getId(),existing);
     }
 }

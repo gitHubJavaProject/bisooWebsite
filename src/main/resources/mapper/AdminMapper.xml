@@ -70,5 +70,12 @@
             AND aar.login_name like '%${admin.loginName}%'
         </if>
     </select>
-
+    
+    <select id="findOne" resultMap="AdminListMapper">
+        SELECT
+        *
+        FROM
+        bs_admin
+        where id=${id}
+    </select>
 </mapper>

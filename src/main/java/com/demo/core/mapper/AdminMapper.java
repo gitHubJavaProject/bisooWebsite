@@ -15,7 +15,7 @@ public interface AdminMapper extends MyMapper<Admin> {
      * @param loginName - 用户名
      * @return
      */
-    public Admin getUserByName(@Param("loginName") String loginName);
+     Admin getUserByName(@Param("loginName") String loginName);
 
     /**
      * 查询校验用户密码
@@ -23,12 +23,14 @@ public interface AdminMapper extends MyMapper<Admin> {
      * @param oldPass - 旧密码
      * @return
      */
-    public List<Admin> getAdminPassById(@Param("userId") String userId, @Param("oldPass") String oldPass);
+     List<Admin> getAdminPassById(@Param("userId") String userId, @Param("oldPass") String oldPass);
 
     /**
      * 获取后台用户列表
      * @param admin
      * @return
      */
-    public List<Admin> getAdminList(@Param("admin") Admin admin);
+     List<Admin> getAdminList(@Param("admin") Admin admin);
+
+     Admin findOne(Object id);
 }

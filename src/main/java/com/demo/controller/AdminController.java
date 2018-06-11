@@ -58,7 +58,7 @@ public class AdminController {
             return "login";
         }
         session.setAttribute("loginAdmin", admin);
-        return "home";
+        return "login";
     }
 
     /**

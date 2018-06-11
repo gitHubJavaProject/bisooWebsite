@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.demo.core.mapper.UserInfoMapper">
+    <resultMap id="UserInfoResult" type="com.demo.core.model.UserInfo">
+        <id property="id" column="user_id"/>
+        <result property="realName" column="real_name"/>
+        <result property="idCard" column="id_card"/>
+        <result property="idcardFront" column="idcard_front"/>
+        <result property="idcardBack" column="idcard_back"/>
+        <result property="idcardHandheld" column="idcard_handheld"/>
+        <result property="status" column="status"/>
+        <result property="primaryTime" column="primary_time"/>
+        <result property="advancedTime" column="advanced_time"/>
+    </resultMap>
     <update id="updateStatus">
         UPDATE
         bs_user_info
         set status = #{status}
         where user_id = #{id}
     </update>
+    
+    <select id="findOne" resultMap="UserInfoResult">
+        SELECT
+        *
+        FROM
+        bs_user_info
+        WHERE id=#{id}
+    </select>
 </mapper>

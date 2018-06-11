@@ -22,4 +22,5 @@ public interface UserMapper extends MyMapper<User> {
               @Param("userId") String userId,
               @Param("mail") String mail);
 
+    User findOne(Object id);
 }

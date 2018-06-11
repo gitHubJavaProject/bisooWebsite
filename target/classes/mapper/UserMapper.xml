@@ -80,4 +80,12 @@
         bs_user_info bui
         on bu.id = bui.user_id
     </select>
+
+    <select id="findOne" resultMap="UserResult">
+        SELECT
+        *
+        FROM
+        bs_user
+        where id=#{id}
+    </select>
 </mapper>

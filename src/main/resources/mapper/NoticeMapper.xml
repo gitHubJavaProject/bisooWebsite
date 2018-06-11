@@ -42,4 +42,12 @@
         and title = #{title}
     </select>
 
+    <select id="findOne" resultMap="NoticeResult">
+      select
+      *
+      from
+      bs_notice
+      WHERE
+      id=#{id}
+    </select>
 </mapper>

@@ -70,7 +70,11 @@
         var table = layui.table;
         var form = layui.form;
         form.on('submit(formDemo)', function (data) {
-            var where = {}
+            var where = {
+                id: null,
+                phone: null,
+                mail: null
+            }
             where[data.field.proper] = data.field.keys;
             table.reload('idUsers', {
                 where: where //设定异步数据接口的额外参数，任意设
