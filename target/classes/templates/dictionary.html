@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>数据字典管理</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <style>
+        .layui-form-item .layui-form-checkbox[lay-skin=primary] {
+            margin-top: 0px;
+        }
+
+        .layui-body {
+            padding: 15px;
+        }
+
+        .bread {
+            margin-bottom: 10px;
+        }
+
+        .layui-form-item {
+            margin-bottom: 10px;
+        }
+
+        .layui-input {
+            height: 30px;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="shared/header :: header"></div>
+    <div th:replace="shared/sidenav :: sidenav"></div>
+    <div class="layui-body">
+        <div class="bread">
+            当前位置：
+            <span class="layui-breadcrumb" lay-separator="-">
+                <a><cite>数据字典管理</cite></a>
+            </span>
+        </div>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" href="#" onclick="createDictionary();">新建</a>
+        <form class="layui-form" style="margin-top: 15px;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:43px;padding-left:0px;height:12px;line-height:12px;">属性名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input" placeholder="属性名"/>
+                    </div>
+                    <label class="layui-form-label" style="width:43px;padding-left:0px;height:12px;line-height:12px;">类型</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="type" autocomplete="off" class="layui-input" placeholder="类型"/>
+                    </div>
+                    <div class="layui-input-inline" style="width: 100px;">
+                        <button class="layui-btn layui-btn-normal layui-btn-sm" lay-submit="" lay-filter="formDemo" type="submit">搜索</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="layui-hide" id="dictionary" lay-filter="demo"></table>
+    </div>
+    <div th:replace="shared/footer :: footer"></div>
+</div>
+<div id="dicFormId" style="display: none;padding:15px 20px 0px 0px;">
+    <form class="layui-form" lay-filter="dicForm">
+        <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">ID</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="id"  lay-filter="id"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">属性名</label>
+            <div class="layui-input-block">
+            <input class="layui-input" type="text" name="name"  lay-filter="name"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">属性码</label>
+            <div class="layui-input-block">
+            <input class="layui-input" type="text" name="code"  lay-filter="code"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+            <input class="layui-input" type="text" name="type"  lay-filter="type"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+            <input class="layui-input" type="text" name="sortSign"  lay-filter="sortSign"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+            <select class="layui-select" name="status"  lay-filter="status">
+                <option value="0">有效</option>
+                <option value="1">无效</option>
+            </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">父节点ID</label>
+            <div class="layui-input-block">
+            <input type="text" class="layui-input" name="parentId"  lay-filter="parentId"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal layui-btn-sm" lay-submit="" lay-filter="formDic" type="submit">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/layui/layui.js"></script>
+<script>
+
+    var $;
+    var form;
+    layui.use(['element', 'layer', 'form', 'jquery', 'table'], function () {
+        var table = layui.table;
+        form = layui.form;
+        $ = layui.jquery;
+        form.on('submit(formDemo)', function (data) {
+            var where = data.field
+            table.reload('idDictionary', {
+                where: where //设定异步数据接口的额外参数，任意设
+                , page: {
+                    page: 1 //重新从第 1 页开始
+                }
+            });
+            return false;
+        })
+        //执行一个 table 实例
+        table.render({
+            id: 'idDictionary'
+            , elem: '#dictionary'
+            , url: '/dictionary' //数据接口
+            , method: 'get'
+            , request: {
+                pageName: 'page'
+                , limitName: 'rows'
+            }
+            , response: {
+                statusName: 'status' //数据状态的字段名称，默认：code
+                , statusCode: 200 //成功的状态码，默认：0
+                , msgName: 'msg' //状态信息的字段名称，默认：msg
+                , countName: 'count' //数据总数的字段名称，默认：count
+                , dataName: 'data' //数据列表的字段名称，默认：data
+            }
+            , page: true //开启分页
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: 200}
+                , {field: 'parentId', title: '父节点ID', width: 200}
+                , {field: 'name', title: '属性名'}
+                , {field: 'code', title: '属性码', width: 100}
+                , {field: 'type', title: '类型', width: 100}
+                , {field: 'sortSign', title: '排序', width: 100}
+                , {field: 'status', title: '状态', width: 100
+                    , templet: function (d) {
+                        if (d.status === 1) {
+                            return '无效'
+                        } else {
+                            return '有效'
+                        }
+                    }
+                }
+                , {field: 'createTime', title: '添加时间', width: 100}
+                , {title: '操作', width:150, align:'center', toolbar: '#barDemo'}
+            ]]
+        });
+
+        //监听工具条
+        table.on('tool(demo)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index1){
+                    layer.close(index1);
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url: '/dictionary/delete/' + data.id,
+                        type: 'delete',
+                        success: function (result) {
+                            if (result.responseCode === 1) {
+                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                            }
+                            layer.alert(result.responseMsg, {icon: 6});
+                        },
+                        error: function (res) {
+                            alert(res.responseText)
+                        }
+                    })
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                createDictionary()
+                form.val("dicForm", data)
+            }
+        });
+
+        form.on('submit(formDic)', function (data) {
+            if (data.field.id) {
+                $.ajax({
+                    url: '/dictionary/update/' + data.field.id,
+                    type: 'put',
+                    data: data.field,
+                    success: function (result) {
+                        if (result.responseCode === 1) {
+                            layer.close(index)
+                            table.reload('idDictionary');
+                        }
+                        layer.alert(result.responseMsg,{icon:6})
+                    },
+                    error: function (res) {
+                        alert(res.responseText)
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: '/dictionary/create',
+                    type: 'post',
+                    data: data.field,
+                    success: function (result) {
+                        if (result.responseCode === 1) {
+                            layer.close(index)
+                            table.reload('idDictionary', {
+                                where: {name: null,type:null} //设定异步数据接口的额外参数，任意设
+                                , page: {
+                                    page: 1 //重新从第 1 页开始
+                                }
+                            });
+                        }
+                        layer.alert(result.responseMsg,{icon:6})
+                    },
+                    error: function (res) {
+                        alert(res.responseText)
+                    }
+                })
+            }
+            return false;
+        })
+    });
+
+    var index;
+    function createDictionary() {
+        form.val("dicForm", {
+            "id": null
+            ,"name": null
+            ,"code": null
+            ,"type": null
+            ,"sortSign": null
+            ,"status": 0
+            ,"parentId": null
+        })
+        index = layer.open({
+            type: 1,
+            title: '新建',
+            closeBtn: 2,
+            area: ['700px', 'auto'],
+            shadeClose: true,
+            content: $('#dicFormId')
+        });
+    }
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+</body>
+</html>
