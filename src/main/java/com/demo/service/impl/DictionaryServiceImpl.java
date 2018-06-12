@@ -33,6 +33,11 @@ public class DictionaryServiceImpl extends BaseServiceImpl<Dictionary> implement
                                                         dictionary.getRows(), dictionary.getName(),dictionary.getType());
     }
 
+    @Override
+    public List<Dictionary> findByType(String type) {
+        return dictionaryMapper.findByType(type);
+    }
+
     public long count(Dictionary dictionary) {
         return dictionaryMapper.count(dictionary);
     }

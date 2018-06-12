@@ -18,4 +18,6 @@ public interface DictionaryMapper extends MyMapper<Dictionary> {
     long count(Dictionary dictionary);
 
     Dictionary findOne(Object id);
+
+    List<Dictionary> findByType(@Param("type") String type);
 }

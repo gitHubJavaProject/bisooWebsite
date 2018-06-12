@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.core.mapper.ChargeAndWithdrawMapper">
+   <resultMap id="ChargeAndWithdrawResult" type="com.demo.core.model.chargeAndWithdrawOutData.ChargeAndWithdraw">
+       <result property="finishTime" column="finish_time"/>
+       <result property="userId" column="user_id"/>
+       <result property="type" column="type"/>
+       <result property="assetName" column="assetName"/>
+       <result property="amount" column="amount"/>
+       <result property="withdrawAddress" column="withdrawAddress"/>
+   </resultMap>
+
+    <select id="findByEntity" resultMap="ChargeAndWithdrawResult">
+        SELECT
+        tmp.*
+        FROM
+        (select
+        c.*
+        FROM
+        (SELECT user_id,finish_time, '充币' AS `type`,asset_id,amount,withdraw_address
+        FROM bs_user_asset_charge where `status`=1) c
+        WHERE 1 = 1
+        <if test="null != type and type != ''">and c.`type`=#{type}</if>
+        <if test=" null != userId">and c.user_id like "%"#{userId}"%"</if>
+        <if test=" null != finishTime">and c.finish_time &gt; #{finishTime} and c.finish_time &lt; DATE_ADD(#{finishTime}, Interval 1 day)</if>
+        <if test=" null != assetId and assetId != ''">and c.asset_id=#{assetId}</if>
+        UNION ALL
+        SELECT
+        w.*
+        FROM
+        (SELECT user_id,finish_time,'提币' AS `type`,asset_id,amount,withdraw_address
+        FROM bs_user_asset_withdraw where `status`=1) w
+        WHERE 1 = 1
+        <if test="null != type and type != ''">and w.`type`=#{type}</if>
+        <if test=" null != userId">and w.user_id like "%"#{userId}"%"</if>
+        <if test=" null != finishTime">and w.finish_time &gt; #{finishTime} and w.finish_time &lt; DATE_ADD(#{finishTime}, Interval 1 day)</if>
+        <if test=" null != assetId and assetId != ''">and w.asset_id=#{assetId}</if>) tmp
+        order by tmp.finish_time DESC
+        limit #{offset}, #{size}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT
+        count(tmp.user_id)
+        FROM
+        (select
+        c.*
+        FROM
+        (SELECT user_id,finish_time, '充币' AS `type`,asset_id,amount,withdraw_address
+        FROM bs_user_asset_charge where `status`=1) c
+        WHERE 1 = 1
+        <if test="null != type and type != ''">and c.`type`=#{type}</if>
+        <if test=" null != userId">and c.user_id like "%"#{userId}"%"</if>
+        <if test=" null != finishTime">and c.finish_time &gt; #{finishTime} and c.finish_time &lt; DATE_ADD(#{finishTime}, Interval 1 day)</if>
+        <if test=" null != assetId and assetId != ''">and c.asset_id=#{assetId}</if>
+        UNION ALL
+        SELECT
+        w.*
+        FROM
+        (SELECT user_id,finish_time,'提币' AS `type`,asset_id,amount,withdraw_address
+        FROM bs_user_asset_withdraw where `status`=1) w
+        WHERE 1 = 1
+        <if test="null != type and type != ''">and w.`type`=#{type}</if>
+        <if test=" null != userId">and w.user_id like "%"#{userId}"%"</if>
+        <if test=" null != finishTime">and w.finish_time &gt; #{finishTime} and w.finish_time &lt; DATE_ADD(#{finishTime}, Interval 1 day)</if>
+        <if test=" null != assetId and assetId != ''">and w.asset_id=#{assetId}</if>) tmp
+    </select>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.core.mapper.MarketInfoMapper">
+
+
+    <!-- 映射实体 -->
+    <resultMap id="BaseResultMap" type="com.demo.core.model.MarketInfo" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="market_asset_id" property="marketAssetId" jdbcType="VARCHAR" />
+        <result column="deal_asset_id" property="dealAssetId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="portfolioAssets" property="portfolioAssets" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <!-- 查询交易资产类型 -->
+    <select id="getDealAssetIdInfo" resultType="com.demo.core.model.MarketInfo">
+        SELECT deal_asset_id  FROM bs_market_info
+        GROUP BY deal_asset_id
+    </select>
+
+    <!-- 查询市场交易资产类型,按市场类型做条件  LOWER()将字母变大-->
+    <select id="getMarketAssetIdInfo" resultMap="BaseResultMap" >
+        SELECT * FROM bs_market_info
+        WHERE 1 = 1
+        AND `status` = 1
+        ORDER BY create_time
+
+        <!--  SELECT  id,market_asset_id,deal_asset_id,create_time
+        ,CONCAT_WS('/',deal_asset_id,market_asset_id) AS portfolioAssets
+        FROM bs_market_info WHERE 1 = 1
+        <if test="marketAssetId != null and marketAssetId != '' ">
+            AND market_asset_id = #{marketAssetId}
+        </if>
+        ORDER BY create_time-->
+
+    </select>
+
+
+    <!-- 下架产品 -->
+    <update id="modifyMarketDealAsset" parameterType="com.demo.core.model.MarketInfo">
+
+      UPDATE bs_market_info SET `status` = 0,update_time=now()
+      WHERE 1 = 1
+      <if test=" id != null and id.length() > 0">
+          AND id = #{id}
+      </if>
+
+    </update>
+
+
+    <!-- 添加产品信息 -->
+    <insert id="insertMarketInfo" parameterType="com.demo.core.model.MarketInfo" >
+        INSERT INTO bs_market_info(
+          id,market_asset_id,deal_asset_id,create_time
+         )
+        VALUES (
+          #{id,jdbcType=VARCHAR},
+          #{marketAssetId,jdbcType=VARCHAR},
+          #{dealAssetId,jdbcType=VARCHAR},
+          now()
+        )
+
+    </insert>
+
+
+    <!-- 查询所有品种 -->
+    <select id="getAllMarketInfo" resultMap="BaseResultMap">
+        SELECT  id,market_asset_id,deal_asset_id,create_time,CONCAT_WS('/',market_asset_id,deal_asset_id) AS portfolioAssets
+        FROM bs_market_info
+        ORDER BY deal_asset_id
+
+    </select>
+
+
+</mapper>

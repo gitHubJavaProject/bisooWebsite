@@ -9,4 +9,5 @@ public interface DictionaryService extends BaseService<Dictionary> {
 
      List<Dictionary> findPageByDictionary(Dictionary dictionary);
 
+     List<Dictionary> findByType(String type);
 }

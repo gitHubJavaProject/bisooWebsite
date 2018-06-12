@@ -41,4 +41,12 @@
       bs_data_dictionary
       where id=#{id}
     </select>
+
+    <select id="findByType" resultMap="DictionaryResult">
+        SELECT
+        *
+        FROM
+        bs_data_dictionary
+        where `type`=#{type}
+    </select>
 </mapper>
