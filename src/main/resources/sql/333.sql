@@ -85,6 +85,20 @@ CREATE TABLE `bs_notice` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Table structure for table `bs_permission` */
+
+CREATE TABLE `bs_permission` (
+  `id` varchar(32) NOT NULL,
+  `permission_name` varchar(50) DEFAULT NULL COMMENT '权限名',
+  `permission_nid` varchar(50) DEFAULT NULL COMMENT '权限简写',
+  `permission_link` varchar(100) DEFAULT NULL COMMENT '全线连接',
+  `type` tinyint(1) DEFAULT NULL COMMENT '权限类型',
+  `parent_id` varchar(32) DEFAULT NULL COMMENT '父id',
+  `create_time` datetime DEFAULT NULL COMMENT '添加时间',
+  `create_aid` varchar(32) DEFAULT NULL COMMENT '添加人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='��¼Ȩ����Ϣ';
+
 /*Table structure for table `bs_role` */
 
 CREATE TABLE `bs_role` (
@@ -95,9 +109,9 @@ CREATE TABLE `bs_role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色';
 
-/*Table structure for table `bs_role_permisssion` */
+/*Table structure for table `bs_role_permission` */
 
-CREATE TABLE `bs_role_permisssion` (
+CREATE TABLE `bs_role_permission` (
   `role_id` varchar(32) NOT NULL,
   `permission_id` varchar(32) NOT NULL,
   `create_time` datetime DEFAULT NULL,
@@ -181,11 +195,11 @@ CREATE TABLE `bs_user_asset_withdraw` (
 CREATE TABLE `bs_user_bank_card` (
   `id` varchar(32) NOT NULL,
   `user_id` varchar(32) DEFAULT NULL,
-  `card_num` varchar(20) DEFAULT NULL,
-  `bank_name` varchar(50) DEFAULT NULL,
+  `card_num` varchar(20) DEFAULT NULL COMMENT '银行卡号',
+  `bank_name` varchar(50) DEFAULT NULL COMMENT '银行名称',
   `bank_province` varchar(32) DEFAULT NULL,
   `bank_city` varchar(32) DEFAULT NULL,
-  `back_address` varchar(500) DEFAULT NULL,
+  `back_address` varchar(500) DEFAULT NULL COMMENT '开户地址',
   `create_time` datetime DEFAULT NULL,
   `ip` varchar(15) DEFAULT NULL,
   `source` tinyint(2) DEFAULT NULL,
@@ -319,20 +333,6 @@ CREATE TABLE `bs_userss_account` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `type` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*Table structure for table `bsi_permission` */
-
-CREATE TABLE `bsi_permission` (
-  `id` varchar(32) NOT NULL,
-  `permission_name` varchar(50) DEFAULT NULL COMMENT '权限名',
-  `permission_nid` varchar(50) DEFAULT NULL COMMENT '权限简写',
-  `permission_link` varchar(100) DEFAULT NULL COMMENT '全线连接',
-  `type` tinyint(1) DEFAULT NULL COMMENT '权限类型',
-  `parent_id` varchar(32) DEFAULT NULL COMMENT '父id',
-  `create_time` datetime DEFAULT NULL COMMENT '添加时间',
-  `create_aid` varchar(32) DEFAULT NULL COMMENT '添加人',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='��¼Ȩ����Ϣ';
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
