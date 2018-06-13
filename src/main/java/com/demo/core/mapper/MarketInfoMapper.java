@@ -4,12 +4,14 @@ package com.demo.core.mapper;
 import com.demo.core.model.MarketInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * 平台市场Mapper
  */
+@Repository
 public interface MarketInfoMapper {
 
     /**

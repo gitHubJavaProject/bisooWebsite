@@ -125,6 +125,19 @@ CREATE TABLE `bs_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='�û�������Ϣ��';
 
+/*Table structure for table `bs_user_account` */
+
+CREATE TABLE `bs_user_account` (
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户ID',
+  `balance` decimal(30,8) DEFAULT 0.00000000 COMMENT '资产数量',
+  `frozen` decimal(30,8) DEFAULT 0.00000000 COMMENT '冻结数量',
+  `asset_address` varchar(100) DEFAULT NULL COMMENT '账户地址',
+  `status` tinyint(2) DEFAULT NULL COMMENT '资产状态',
+  `create_time` datetime DEFAULT NULL COMMENT '申请时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `type` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*Table structure for table `bs_user_asset_charge` */
 
 CREATE TABLE `bs_user_asset_charge` (
@@ -254,18 +267,6 @@ CREATE TABLE `bs_user_eth_account` (
   `update_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `bs_user_ic_account` */
-
-CREATE TABLE `bs_user_ic_account` (
-  `user_id` varchar(32) DEFAULT NULL COMMENT '用户ID',
-  `balance` decimal(30,8) DEFAULT 0.00000000 COMMENT '资产数量',
-  `frozen` decimal(30,8) DEFAULT NULL COMMENT '冻结数量',
-  `asset_address` varchar(100) DEFAULT NULL COMMENT '账户地址',
-  `status` tinyint(2) DEFAULT NULL COMMENT '资产状态',
-  `create_time` datetime DEFAULT NULL COMMENT '申请时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 /*Table structure for table `bs_user_info` */
 
 CREATE TABLE `bs_user_info` (
@@ -304,6 +305,19 @@ CREATE TABLE `bs_user_usdt_account` (
   `status` tinyint(2) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Table structure for table `bs_userss_account` */
+
+CREATE TABLE `bs_userss_account` (
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户ID',
+  `balance` decimal(30,8) DEFAULT 0.00000000 COMMENT '资产数量',
+  `frozen` decimal(30,8) DEFAULT 0.00000000 COMMENT '冻结数量',
+  `asset_address` varchar(100) DEFAULT NULL COMMENT '账户地址',
+  `status` tinyint(2) DEFAULT NULL COMMENT '资产状态',
+  `create_time` datetime DEFAULT NULL COMMENT '申请时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `type` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `bsi_permission` */

@@ -47,6 +47,6 @@
         *
         FROM
         bs_data_dictionary
-        where `type`=#{type}
+        where `status`=0 and `type`=#{type}
     </select>
 </mapper>

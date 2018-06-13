@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo.core.mapper.UserAccountMapper">
+
+    <select id="findUserAccountByUserId" resultType="java.util.HashMap">
+      select
+      tb.user_id as userId,
+        <foreach collection="list" index="index" item="item"
+                 open="" separator="," close="">
+            max(case tb.type when #{item} then tb.balance  else 0 end) AS #{item}
+        </foreach>
+      from
+      (SELECT
+      a.user_id as user_id, a.balance as balance, a.type as `type`
+      FROM
+      (select
+      s.id as user_id
+      FROM
+      bs_user s
+        where 1=1
+        <if test="null != userId">and s.id like "%"#{userId}"%"</if>
+      limit #{offset}, #{size}) u
+      left JOIN
+      bs_user_account a
+      on u.user_id=a.user_id) tb
+      group by
+      tb.user_id
+    </select>
+
+    <select id="count" resultType="long">
+    SELECT
+    count(*)
+    from
+    bs_user
+    where 1=1
+    <if test="null != userId">and id like "%"#{userId}"%"</if>
+    </select>
+</mapper>

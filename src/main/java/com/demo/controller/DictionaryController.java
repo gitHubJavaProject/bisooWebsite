@@ -77,4 +77,16 @@ public class DictionaryController {
         DataBaseEntity dataBaseEntity = dictionaryService.update(dictionary);
         return new ResultEntity(1, "修改成功", dataBaseEntity);
     }
+
+    @RequestMapping(value = "/updateStatus/{id}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public ResultEntity update(@PathVariable("id") String id, Integer status) {
+        Dictionary oldDictionary = dictionaryService.findOne(id);
+        if (null == oldDictionary) {
+            return new ResultEntity(0, "资源不存在");
+        }
+        oldDictionary.setStatus(status);
+        DataBaseEntity dataBaseEntity = dictionaryService.update(oldDictionary);
+        return new ResultEntity(1, "修改成功", dataBaseEntity);
+    }
 }

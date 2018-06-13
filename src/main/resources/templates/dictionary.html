@@ -163,16 +163,33 @@
                 , {field: 'sortSign', title: '排序', width: 100}
                 , {field: 'status', title: '状态', width: 100
                     , templet: function (d) {
-                        if (d.status === 1) {
-                            return '无效'
-                        } else {
-                            return '有效'
-                        }
+                    if (d.status) {
+                        return '<form class="layui-form"><input type="checkbox" value="'+ d.id +
+                            '" name="status" lay-skin="switch" lay-text="有效|无效" lay-filter="switch1"/></form>'
+                    } else {
+                        return '<form class="layui-form"><input type="checkbox" value="'+ d.id +
+                            '" name="status" lay-skin="switch" checked="checked" lay-text="有效|无效" lay-filter="switch1"/></form>'
+                    }
+
                     }
                 }
                 , {field: 'createTime', title: '添加时间', width: 100}
                 , {title: '操作', width:150, align:'center', toolbar: '#barDemo'}
             ]]
+        });
+
+        form.on('switch(switch1)', function(data){
+            $.ajax({
+               url: '/dictionary/updateStatus/'+data.value,
+                type: 'patch',
+               data: 'status='+(data.elem.checked ? 0 : 1),
+                success: function (result) {
+                },
+                error: function (res) {
+                    alert(res.responseText)
+                }
+            })
+            return false
         });
 
         //监听工具条
