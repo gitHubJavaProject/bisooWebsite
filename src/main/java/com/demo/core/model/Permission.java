@@ -7,7 +7,7 @@ import javax.persistence.Table;
 /**
  * 权限
  */
-@Table(name = "bsi_permission")
+@Table(name = "bs_permission")
 public class Permission extends BaseEntity {
 
     private static final long serialVersionUID = 2550175081043212315L;

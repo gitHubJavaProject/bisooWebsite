@@ -12,10 +12,14 @@
         <result property="position" column="position"/>
         <result property="createAid" column="create_aid"/>
         <result property="createTime" column="create_time" />
-        <association property="roleInfo" javaType="com.demo.core.model.Role">
-            <id property="id" column="role_id" />
+        <association property="role" javaType="com.demo.core.model.Role">
+            <id property="id" column="rid" />
             <result property="roleName" column="role_name" />
         </association>
+        <collection property="permissions" ofType="Permission">
+            <id property="id" column="pid"/>
+            <result property="permissionName" column="permission_name"/>
+        </collection>
     </resultMap>
 
     <!-- 根据用户姓名获取用户信息 -->
@@ -35,40 +39,35 @@
     <!-- 获取后台用户列表 -->
     <select id="getAdminList" resultMap="AdminListMapper">
         SELECT
-        aar.id,
-        aar.group_id,
-        aar.position,
-        aar.password,
-        aar.job_number,
+        a.id,
+        a.login_name,
+        a.password,
+        r.id as rid,
         r.role_name,
-        aar.login_name,
-        aar.create_time,
-        aar.create_aid
+        p.id as pid,
+        p.permission_name
         FROM
-        (SELECT
+        (select
         *
         FROM
-        bs_admin a
+        bs_admin
+        limit #{offset}, #{size}
+        ) a
         LEFT JOIN
-        (SELECT
-        admin_id,
-        role_id
-        FROM
-        bs_admin_role) ar
+        bs_admin_role ar
         ON
-        a.id=ar.admin_id ) aar
+        a.id = ar.admin_id
         LEFT JOIN
         bs_role r
         ON
-        aar.role_id=r.id
-        WHERE
-        1=1
-        <if test="admin.id != null and admin.id != ''">
-            AND aar.id = #{admin.id}
-        </if>
-        <if test="admin.loginName != null and admin.loginName != ''">
-            AND aar.login_name like '%${admin.loginName}%'
-        </if>
+        ar.role_id = r.id
+        left JOIN
+        bs_role_permission rp
+        on rp.role_id = r.id
+        LEFT JOIN
+        bs_permission p
+        on p.id = rp.permission_id
+        order by a.create_time DESC
     </select>
     
     <select id="findOne" resultMap="AdminListMapper">
@@ -76,6 +75,39 @@
         *
         FROM
         bs_admin
-        where id=${id}
+        where id=#{id}
     </select>
+
+    <delete id="deleteAdminRole">
+      delete
+      from
+      bs_admin_role
+      where admin_id=#{id}
+    </delete>
+
+    
+    <delete id="deleteRolePermission">
+      delete
+      from
+      bs_role_permission
+      where role_id=#{id}
+    </delete>
+    
+    <insert id="createAdminRole">
+      INSERT into
+      bs_admin_role
+      (admin_id,role_id,create_time,create_aid)
+      value
+      (#{adminId},#{roleId},#{createTime},#{createAid})
+    </insert>
+
+    <insert id="createRolePermission">
+        INSERT into
+        bs_role_permission
+        (role_id,permission_id,create_time,create_aid)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId},#{item.permissionId},#{item.createTime},#{item.createAid})
+        </foreach>
+    </insert>
 </mapper>

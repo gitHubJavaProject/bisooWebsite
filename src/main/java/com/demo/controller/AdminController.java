@@ -14,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admins")
@@ -146,9 +149,24 @@ public class AdminController {
         return new ResultEntity(1, "修改成功", dataBaseEntity);
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping("")
     @ResponseBody
-    public ResultEntity list(Admin admin) {
-        return  new ResultEntity(1, adminService.getAdminList(admin));
+    public Object list(Admin admin) {
+        return  convert(adminService.getAdminList(admin));
     }
+
+    private Map<String, Object> convert(List<Admin> admins) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", 200);
+        map.put("msg", "ok");
+        map.put("data", admins);
+        map.put("count", adminService.count(null));
+        return map;
+    }
+
+    @RequestMapping("list")
+    public String list() {
+        return "admins";
+    }
+
 }

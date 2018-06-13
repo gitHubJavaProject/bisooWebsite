@@ -65,4 +65,38 @@
         <if test=" null != finishTime">and w.finish_time &gt; #{finishTime} and w.finish_time &lt; DATE_ADD(#{finishTime}, Interval 1 day)</if>
         <if test=" null != assetId and assetId != ''">and w.asset_id=#{assetId}</if>) tmp
     </select>
+
+    <select id="findWithdrawAddressByUserId" resultType="java.util.HashMap">
+        select
+        tb.user_id as userId,
+        <foreach collection="list" index="index" item="item"
+                 open="" separator="," close="">
+            max(case tb.type when #{item} then tb.balance  else 0 end) AS #{item}
+        </foreach>
+        from
+        (SELECT
+        a.user_id as user_id, a.withdraw_address as balance, a.asset_id as `type`
+        FROM
+        (select
+        s.id as user_id
+        FROM
+        bs_user s
+        where 1=1
+        <if test="null != userId">and s.id like "%"#{userId}"%"</if>
+        limit #{offset}, #{size}) u
+        left JOIN
+        bs_user_asset_withdraw a
+        on u.user_id=a.user_id) tb
+        group by
+        tb.user_id
+    </select>
+
+    <select id="countWithdrawAddressByUserId" resultType="long">
+        SELECT
+        count(*)
+        from
+        bs_user
+        where 1=1
+        <if test="null != userId">and id like "%"#{userId}"%"</if>
+    </select>
 </mapper>

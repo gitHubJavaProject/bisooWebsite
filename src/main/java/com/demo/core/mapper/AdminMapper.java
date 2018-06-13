@@ -5,7 +5,9 @@ import com.demo.mybatis.MyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface AdminMapper extends MyMapper<Admin> {
@@ -30,7 +32,19 @@ public interface AdminMapper extends MyMapper<Admin> {
      * @param admin
      * @return
      */
-     List<Admin> getAdminList(@Param("admin") Admin admin);
+     List<Admin> getAdminList(@Param("offset") Integer offset,
+                              @Param("size") Integer size);
 
      Admin findOne(Object id);
+
+    void deleteAdminRole(@Param("id") String id);
+
+    void deleteRolePermission(@Param("id") String id);
+
+    void createAdminRole(@Param("adminId") String adminId,
+                         @Param("roleId") String roleId,
+                         @Param("createTime") Timestamp createTime,
+                         @Param("createAid") String createAid);
+
+    void createRolePermission(@Param("list") List<Map<String, Object>> list);
 }

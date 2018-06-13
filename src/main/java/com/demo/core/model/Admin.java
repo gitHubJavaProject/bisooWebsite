@@ -4,6 +4,7 @@ import com.demo.core.model.base.BaseEntity;
 
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * 管理员用户
@@ -19,8 +20,16 @@ public class Admin extends BaseEntity {
     private String position;//职位
     private String createAid;//创建人id
 
+    /**
+     * 角色
+     */
     @Transient
-    private Role roleInfo;
+    private Role role;
+    /**
+     * 权限
+     */
+    @Transient
+    private List<Permission> permissions;
 
     public Integer getGroupId() {
         return groupId;
@@ -54,12 +63,20 @@ public class Admin extends BaseEntity {
         this.createAid = createAid;
     }
 
-    public Role getRoleInfo() {
-        return roleInfo;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleInfo(Role roleInfo) {
-        this.roleInfo = roleInfo;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public Integer getJobNumber() {
